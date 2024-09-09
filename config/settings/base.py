@@ -206,3 +206,12 @@ CELERY_TIMEZONE = 'UTC'
 
 # Celery Beat settings
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+
+from celery.schedules import crontab
+
+CELERY_BEAT_SCHEDULE = {
+    'send-daily-like-notifications': {
+        'task': 'recipe.tasks.send_daily_like_notifications',
+        'schedule': crontab(hour=0, minute=0),  # This will run the task daily at midnight
+    },
+}
