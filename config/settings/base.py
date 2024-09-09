@@ -1,18 +1,18 @@
-from pathlib import Path
 import os
+import time
 from datetime import timedelta
+from pathlib import Path
 from decouple import config
-
+from celery.schedules import crontab
+from logging.handlers import TimedRotatingFileHandler
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY')
-
 
 # Application definition
 
@@ -70,7 +70,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
@@ -84,7 +83,6 @@ DATABASES = {
         'PORT': config('DB_PORT', cast=int),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -104,7 +102,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
@@ -118,13 +115,11 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -135,7 +130,6 @@ AUTH_USER_MODEL = 'users.CustomUser'
 
 CORS_ORIGIN_ALLOW_ALL = True
 
-
 # Email config
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
@@ -143,7 +137,6 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = config('EMAIL_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_PASSWORD')
-
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -207,11 +200,82 @@ CELERY_TIMEZONE = 'UTC'
 # Celery Beat settings
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
-from celery.schedules import crontab
-
 CELERY_BEAT_SCHEDULE = {
     'send-daily-like-notifications': {
         'task': 'recipe.tasks.send_daily_like_notifications',
         'schedule': crontab(hour=0, minute=0),  # This will run the task daily at midnight
     },
 }
+
+# Logging
+
+# Define logs directory outside of the code folder
+LOGS_DIR = os.path.join(os.path.dirname(BASE_DIR), 'logs')
+os.makedirs(LOGS_DIR, exist_ok=True)
+
+class TimestampedFileHandler(TimedRotatingFileHandler):
+    def __init__(self, filename, when='midnight', interval=1, backupCount=30, encoding=None, delay=False, utc=False, atTime=None):
+        super().__init__(filename, when, interval, backupCount, encoding, delay, utc, atTime)
+        self.namer = self._namer
+        self.rotator = self._rotator
+
+    def _namer(self, default_name):
+        directory = os.path.dirname(default_name)
+        base_filename = os.path.basename(default_name)
+        name, ext = os.path.splitext(base_filename)
+        timestamp = time.strftime("%Y%m%d-%H%M%S")
+        return os.path.join(directory, f"{name}.{timestamp}{ext}")
+
+    def _rotator(self, source, dest):
+        if os.path.exists(source):
+            os.rename(source, dest)
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'django_file': {
+            'level': 'DEBUG',
+            'class': 'config.settings.base.TimestampedFileHandler',
+            'filename': os.path.join(LOGS_DIR, 'django.log'),
+            'when': 'midnight',
+            'interval': 1,
+            'backupCount': 30,
+            'formatter': 'verbose',
+        },
+        'celery_beat_file': {
+            'level': 'DEBUG',
+            'class': 'config.settings.base.TimestampedFileHandler',
+            'filename': os.path.join(LOGS_DIR, 'celery_beat.log'),
+            'when': 'midnight',
+            'interval': 1,
+            'backupCount': 30,
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['django_file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'celery_beat': {
+            'handlers': ['celery_beat_file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'recipe': {
+            'handlers': ['django_file', 'celery_beat_file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
+
+

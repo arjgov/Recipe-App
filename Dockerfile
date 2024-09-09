@@ -15,8 +15,8 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 # Copy project
 COPY . /code/
 
-# Collect static files
-RUN python manage.py collectstatic --noinput
+# Create log directory
+RUN mkdir -p /code/logs && chmod 777 /code/logs
 
 # Run gunicorn
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "config.wsgi:application"]
