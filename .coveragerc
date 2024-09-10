@@ -1,0 +1,26 @@
+[run]
+source = .
+omit =
+    */migrations/*
+    */tests/*
+    */venv/*
+    manage.py
+    config/settings/*
+    config/wsgi.py
+    config/asgi.py
+
+[report]
+exclude_lines =
+    pragma: no cover
+    def __str__
+    def __repr__
+    if self.debug:
+    if __name__ == .__main__.:
+    raise NotImplementedError
+    pass
+    except ImportError:
+    def setUp
+    def tearDown
+
+[html]
+directory = htmlcov

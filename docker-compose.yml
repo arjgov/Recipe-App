@@ -82,6 +82,15 @@ services:
       - redis
       - migration
 
+  test:
+    build: .
+    command: sh -c "pytest --cov=. --cov-report=html:htmlcov"
+    volumes:
+      - .:/code
+      - ./htmlcov:/code/htmlcov  # Mount the htmlcov directory to the host
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings.test
+
 volumes:
   postgres_data:
   static_volume:
