@@ -93,5 +93,3 @@ For example, a log file might be named `celery_worker.log.20240911-200253`, indi
 ### Log File Location
 - **Log Directory**: `logs/`
 - **Log File Naming**: Each log file will have a timestamp appended to the filename, allowing you to keep track of logs over time.
-
-## Conclusion
