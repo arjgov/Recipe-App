@@ -19,14 +19,6 @@ EMAIL_PASSWORD="your_email_password"
 
 ```
 
-
-## Error Handling
-If you encounter any errors, you may need to run the following command manually to apply migrations:
-
-```bash
-python manage.py migrate
-```
-
 ## Docker Setup
 To compose and start the Docker container, run the following command in the root directory of the project:
 
@@ -35,6 +27,15 @@ docker compose up --build
 ```
 Once the containers are up and running, you can access the app at [http://localhost:8000](http://localhost:8000).
 There should be containers running for celery worker and celery beat as well, you can view that by running `docker ps`
+
+## Error Handling
+
+> **Note:** If you encounter any errors, you may need to run the following command manually to apply migrations:
+>
+> ```bash
+> python manage.py migrate
+> ```
+
 
 ## Alternative Running the Application locally
 To run the application locally, use the following command:
@@ -46,22 +47,25 @@ python manage.py runserver
 ## Celery Worker and Beat
 The application uses Celery for background tasks. The `celery beat` scheduler runs tasks at specified intervals. By default, the `send-daily-like-notifications` task is scheduled to run once a day.
 
-If you want to test the task more frequently, you can change the `CELERY_BEAT_SCHEDULE` in `config/settings/base.py` to run every minute:
 
-```
-CELERY_BEAT_SCHEDULE = {
-'send-daily-like-notifications': {
-'task': 'recipe.tasks.send_daily_like_notifications',
-'schedule': crontab(minute=''), # This will run the task every minute
-},
-```
-
-After making this change, you will need to take down the Docker containers and redeploy them:
-
-```bash
-docker compose down
-docker compose up --build
-```
+> **Note:** 
+> If you want to test the task more frequently, you can change the `CELERY_BEAT_SCHEDULE` in `config/settings/base.py` to run  every minute:
+> You can modify the `CELERY_BEAT_SCHEDULE` as follows:
+>
+> ```python
+> CELERY_BEAT_SCHEDULE = {
+>     'send-daily-like-notifications': {
+>         'task': 'recipe.tasks.send_daily_like_notifications',
+>         'schedule': crontab(minute='*'),  # This will run the task every minute
+>     },
+> }
+> ```
+>
+> After making this change, you will need to take down the Docker containers and redeploy them:
+>
+> ```bash
+> docker compose down
+> docker compos
 
 
 ## Running Tests and Coverage
