@@ -1,0 +1,471 @@
+{
+    "info": {
+      "name": "Recipe App API",
+      "description": "Postman collection for testing the Recipe App API endpoints.",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+      {
+        "name": "User Authentication",
+        "item": [
+          {
+            "name": "User Registration",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\"username\": \"testuser\", \"password\": \"testpassword\", \"email\": \"testuser@example.com\"}"
+              },
+              "url": {
+                "raw": "http://localhost:8000/api/users/register/",
+                "protocol": "http",
+                "host": [
+                  "localhost"
+                ],
+                "port": "8000",
+                "path": [
+                  "api",
+                  "users",
+                  "register"
+                ]
+              }
+            },
+            "response": []
+          },
+          {
+            "name": "User Login",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\"username\": \"testuser\", \"password\": \"testpassword\"}"
+              },
+              "url": {
+                "raw": "http://localhost:8000/api/users/login/",
+                "protocol": "http",
+                "host": [
+                  "localhost"
+                ],
+                "port": "8000",
+                "path": [
+                  "api",
+                  "users",
+                  "login"
+                ]
+              }
+            },
+            "response": []
+          },
+          {
+            "name": "User Logout",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{access_token}}"
+                }
+              ],
+              "url": {
+                "raw": "http://localhost:8000/api/users/logout/",
+                "protocol": "http",
+                "host": [
+                  "localhost"
+                ],
+                "port": "8000",
+                "path": [
+                  "api",
+                  "users",
+                  "logout"
+                ]
+              }
+            },
+            "response": []
+          },
+          {
+            "name": "Get User Info",
+            "request": {
+              "method": "GET",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{access_token}}"
+                }
+              ],
+              "url": {
+                "raw": "http://localhost:8000/api/users/",
+                "protocol": "http",
+                "host": [
+                  "localhost"
+                ],
+                "port": "8000",
+                "path": [
+                  "api",
+                  "users"
+                ]
+              }
+            },
+            "response": []
+          },
+          {
+            "name": "User Profile",
+            "request": {
+              "method": "GET",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{access_token}}"
+                }
+              ],
+              "url": {
+                "raw": "http://localhost:8000/api/users/profile/",
+                "protocol": "http",
+                "host": [
+                  "localhost"
+                ],
+                "port": "8000",
+                "path": [
+                  "api",
+                  "users",
+                  "profile"
+                ]
+              }
+            },
+            "response": []
+          },
+          {
+            "name": "Update User Avatar",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{access_token}}"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "multipart/form-data"
+                }
+              ],
+              "body": {
+                "mode": "formdata",
+                "formdata": [
+                  {
+                    "key": "avatar",
+                    "type": "file",
+                    "src": "path/to/your/avatar.jpg"
+                  }
+                ]
+              },
+              "url": {
+                "raw": "http://localhost:8000/api/users/profile/avatar/",
+                "protocol": "http",
+                "host": [
+                  "localhost"
+                ],
+                "port": "8000",
+                "path": [
+                  "api",
+                  "users",
+                  "profile",
+                  "avatar"
+                ]
+              }
+            },
+            "response": []
+          },
+          {
+            "name": "Change Password",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{access_token}}"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\"old_password\": \"oldpassword\", \"new_password\": \"newpassword\"}"
+              },
+              "url": {
+                "raw": "http://localhost:8000/api/users/password/change/",
+                "protocol": "http",
+                "host": [
+                  "localhost"
+                ],
+                "port": "8000",
+                "path": [
+                  "api",
+                  "users",
+                  "password",
+                  "change"
+                ]
+              }
+            },
+            "response": []
+          }
+        ]
+      },
+      {
+        "name": "Recipes",
+        "item": [
+          {
+            "name": "List Recipes",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "http://localhost:8000/api/recipes/",
+                "protocol": "http",
+                "host": [
+                  "localhost"
+                ],
+                "port": "8000",
+                "path": [
+                  "api",
+                  "recipes"
+                ]
+              }
+            },
+            "response": []
+          },
+          {
+            "name": "Create Recipe",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{access_token}}"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "multipart/form-data"
+                }
+              ],
+              "body": {
+                "mode": "formdata",
+                "formdata": [
+                  {
+                    "key": "author",
+                    "type": "text",
+                    "value": "{{user_id}}"
+                  },
+                  {
+                    "key": "category.name",
+                    "type": "text",
+                    "value": "Test Category"
+                  },
+                  {
+                    "key": "picture",
+                    "type": "file",
+                    "src": "path/to/your/image.jpg"
+                  },
+                  {
+                    "key": "title",
+                    "type": "text",
+                    "value": "New Recipe"
+                  },
+                  {
+                    "key": "desc",
+                    "type": "text",
+                    "value": "Description of new recipe"
+                  },
+                  {
+                    "key": "cook_time",
+                    "type": "text",
+                    "value": "00:30:00"
+                  },
+                  {
+                    "key": "ingredients",
+                    "type": "text",
+                    "value": "Ingredient A, Ingredient B"
+                  },
+                  {
+                    "key": "procedure",
+                    "type": "text",
+                    "value": "Step A, Step B"
+                  }
+                ]
+              },
+              "url": {
+                "raw": "http://localhost:8000/api/recipes/create/",
+                "protocol": "http",
+                "host": [
+                  "localhost"
+                ],
+                "port": "8000",
+                "path": [
+                  "api",
+                  "recipes",
+                  "create"
+                ]
+              }
+            },
+            "response": []
+          },
+          {
+            "name": "Retrieve Recipe",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "http://localhost:8000/api/recipes/{{recipe_id}}/",
+                "protocol": "http",
+                "host": [
+                  "localhost"
+                ],
+                "port": "8000",
+                "path": [
+                  "api",
+                  "recipes",
+                  "{{recipe_id}}"
+                ]
+              }
+            },
+            "response": []
+          },
+          {
+            "name": "Update Recipe",
+            "request": {
+              "method": "PUT",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{access_token}}"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "multipart/form-data"
+                }
+              ],
+              "body": {
+                "mode": "formdata",
+                "formdata": [
+                  {
+                    "key": "title",
+                    "type": "text",
+                    "value": "Updated Recipe Title"
+                  },
+                  {
+                    "key": "desc",
+                    "type": "text",
+                    "value": "Updated description"
+                  },
+                  {
+                    "key": "cook_time",
+                    "type": "text",
+                    "value": "01:00:00"
+                  },
+                  {
+                    "key": "ingredients",
+                    "type": "text",
+                    "value": "Updated Ingredient 1, Updated Ingredient 2"
+                  },
+                  {
+                    "key": "procedure",
+                    "type": "text",
+                    "value": "Updated Step 1, Updated Step 2"
+                  },
+                  {
+                    "key": "category.name",
+                    "type": "text",
+                    "value": "Updated Category"
+                  },
+                  {
+                    "key": "picture",
+                    "type": "file",
+                    "src": "path/to/your/updated_image.jpg"
+                  }
+                ]
+              },
+              "url": {
+                "raw": "http://localhost:8000/api/recipes/{{recipe_id}}/",
+                "protocol": "http",
+                "host": [
+                  "localhost"
+                ],
+                "port": "8000",
+                "path": [
+                  "api",
+                  "recipes",
+                  "{{recipe_id}}"
+                ]
+              }
+            },
+            "response": []
+          },
+          {
+            "name": "Delete Recipe",
+            "request": {
+              "method": "DELETE",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{access_token}}"
+                }
+              ],
+              "url": {
+                "raw": "http://localhost:8000/api/recipes/{{recipe_id}}/",
+                "protocol": "http",
+                "host": [
+                  "localhost"
+                ],
+                "port": "8000",
+                "path": [
+                  "api",
+                  "recipes",
+                  "{{recipe_id}}"
+                ]
+              }
+            },
+            "response": []
+          },
+          {
+            "name": "Like Recipe",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{access_token}}"
+                }
+              ],
+              "url": {
+                "raw": "http://localhost:8000/api/recipes/{{recipe_id}}/like/",
+                "protocol": "http",
+                "host": [
+                  "localhost"
+                ],
+                "port": "8000",
+                "path": [
+                  "api",
+                  "recipes",
+                  "{{recipe_id}}",
+                  "like"
+                ]
+              }
+            },
+            "response": []
+          }
+        ]
+      }
+    ]
+  }
